@@ -1,0 +1,10 @@
+How the Carbanak cybergang compromised its victims
+
+The investigation confirmed that the kill chain started with a spear phishing attack that targeted banks internal staff. The Carbanak cybergang used malicious emails to compromise banks computer systems. The messages sent to employees of the financial institutions included a link that, once clicked, triggered the download of a malware.
+
+The Carbanak cybergang used the malware to collect information on the targeted organization. The attackers used malicious code to find the employees who were in charge of cash transfer systems or ATMs and to gather information on the internal systems of the banks.
+
+In a second phase of the attacks, the hackers installed a remote access tool (RAT) on the machines of those employees. Once they had infected the computers of the personnel in charge of cash transfer systems or ATMs, the attackers collected snapshots of victims screens and studied their daily activities in the bank.
+
+In the last phase of the attack, the hackers were able to remotely control the ATMs to dispense money or transfer money to fake accounts.
+
