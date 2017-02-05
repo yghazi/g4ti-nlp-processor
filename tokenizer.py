@@ -126,27 +126,42 @@ def annotate_conll(annotated_content):
             else:
                 label = 'O'
             file_content += "{}\t{}\t{}\n".format(token, pos, label)
-    with open(TRAIN_DATA_PATH + "/" + current_milli_time() + ".iob", 'w') as train_file:
+    with open(TRAIN_DATA_PATH + "/" + current_milli_time() + '.iob', 'w') as train_file:
         train_file.write(file_content)
         train_file.close()
 
 
-def train_NER_and_pickle():
+def train_and_pickle():
     samples = get_training_samples()
     chunker = custom_trainer.NamedEntityChunker(samples)
-    chunker_pickle = open(TRAIN_MODEL_PICKLE, "wb")
+    chunker_pickle = open(TRAIN_MODEL_PICKLE, 'wb')
     pickle.dump(chunker, chunker_pickle)
     chunker_pickle.close()
 
 
-def test_NER():
+def test_ner():
+    with open(TEST_PATH + '/carbanak-test.txt') as test:
+        txt = test.read()
+        print(ner_tag_text(txt))
+        test.close()
+
+
+def ner_tag_text(text):
+    """
+    NER tag text
+    :param text:
+    :return: CONLL IOB format text
+    """
     pickle_file = open(TRAIN_MODEL_PICKLE, 'rb')
     chunker_pickle = pickle.load(pickle_file)
     pickle_file.close()
-    with open(TEST_PATH + "/carbanak-test.txt") as test:
-        txt = test.read()
-        print(chunker_pickle.parse(pos_tag(word_tokenize(txt))))
-        test.close()
+    return tree2conlltags(chunker_pickle.parse(pos_tag(word_tokenize(text))))
 
-train_NER_and_pickle()
-test_NER()
+
+# train_and_pickle()
+test_ner()
+while True:
+    print("Train again...")
+    train_and_pickle()
+    time.sleep(60 * 60 * 2) # TODO: Will retrain every 2 hours.. need to make this configurable
+
