@@ -2,11 +2,11 @@ import codecs
 import os
 import time
 
-from nltk import word_tokenize, sent_tokenize, pos_tag, RegexpParser
-from nltk.corpus.reader import ConllChunkCorpusReader, pickle
+from nltk import word_tokenize, sent_tokenize, pos_tag
 from nltk.chunk import tree2conlltags
+from nltk.corpus.reader import ConllChunkCorpusReader, pickle
 
-import custom_trainer
+from g4ti import custom_trainer
 
 TRAIN_DATA_PATH = 'g4ti-corpus'
 
@@ -158,10 +158,9 @@ def ner_tag_text(text):
     return tree2conlltags(chunker_pickle.parse(pos_tag(word_tokenize(text))))
 
 
-# train_and_pickle()
-test_ner()
-while True:
-    print("Train again...")
-    train_and_pickle()
-    time.sleep(60 * 60 * 2) # TODO: Will retrain every 2 hours.. need to make this configurable
-
+#train_and_pickle()
+# test_ner()
+# while True:
+#    print("Train again...")
+#    train_and_pickle()
+#    time.sleep(60 * 60 * 2) # TODO: Will retrain every 2 hours.. need to make this configurable
