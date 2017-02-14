@@ -16,6 +16,11 @@ def welcome():
     return "Welcome to tator api"
 
 
+@app.route("/api/train", methods=['POST'])
+def train():
+    return
+
+
 @app.route('/api/content/upload', methods=['POST'])
 def upload():
     f = request.files['file']
