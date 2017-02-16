@@ -16,9 +16,14 @@ def welcome():
     return "Welcome to tator api"
 
 
-@app.route("/api/train", methods=['POST'])
+@app.route("/api/train/", methods=['POST'])
 def train():
-    return
+    annotated_content = request.get_data()
+    annotated_content = annotated_content.decode('UTF-8')
+    annotated_content = json.loads(annotated_content)
+    print(annotated_content)
+    tokenizer.annotate_conll(annotated_content)
+    return "{'submitted':true}"
 
 
 @app.route('/api/content/upload', methods=['POST'])
