@@ -27,6 +27,7 @@ class NamedEntityChunker(ChunkParserI):
         iob_triplets = [(w, t, c) for ((w, t), c) in chunks]
 
         # Transform the list of triplets to nltk.Tree format
+
         return conlltags2tree(iob_triplets)
 
 

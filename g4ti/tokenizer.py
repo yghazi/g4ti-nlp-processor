@@ -111,6 +111,7 @@ def annotate_conll(annotated_content):
         for i, token in enumerate(sent_tokens):
             meta_token = meta.get(token, None)
             pos = sent_pos.__getitem__(i)[1]
+
             if token in subseq_tokens:
                 subseq_tokens.remove(token)
                 label = "I-" + prev_label

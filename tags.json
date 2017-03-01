@@ -1,0 +1,69 @@
+[{
+	"name": "Actor"
+}, {
+	"name": "Industry"
+}, {
+	"name": "Countries"
+}, {
+	"name": "Discovered On"
+}, {
+	"name": "Attacker Infrastructure Type"
+}, {
+	"name": "Intended Effect"
+}, {
+	"name": "Source"
+}, {
+	"name": "Technique"
+}, {
+	"name": "Information"
+}, {
+	"name": "OS"
+}, {
+	"name": "Tools"
+}, {
+	"name": "Malware Name"
+}, {
+	"name": "Malware Family"
+}, {
+	"name": "Delivery Method"
+}, {
+	"name": "Persistence"
+}, {
+	"name": "Privilege Escalation"
+}, {
+	"name": "Defense Evasion"
+}, {
+	"name": "Credential Access"
+}, {
+	"name": "Lateral Movement"
+}, {
+	"name": "Execution"
+}, {
+	"name": "Collection"
+}, {
+	"name": "Exfiltration"
+}, {
+	"name": "Command and Control"
+}, {
+	"name": "Hash"
+}, {
+	"name": "IP Address"
+}, {
+	"name": "Domain Name"
+}, {
+	"name": "URL"
+}, {
+	"name": "Files/Folders"
+}, {
+	"name": "URL"
+}, {
+	"name": "Reg Entry"
+}, {
+	"name": "API/DLL"
+}, {
+	"name": "Mutexes"
+}, {
+	"name": "Network Packet Information"
+}, {
+	"name": "Application Layer/Protocol Information"
+}]

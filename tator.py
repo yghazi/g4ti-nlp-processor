@@ -15,13 +15,17 @@ CORS(app)
 def welcome():
     return "Welcome to tator api"
 
+@app.route('/api/tags')
+def tags():
+    with open('tags.json') as f:
+        return f.read()
+    return '[{"tags":"null"}]'
 
 @app.route("/api/train/", methods=['POST'])
 def train():
     annotated_content = request.get_data()
     annotated_content = annotated_content.decode('UTF-8')
     annotated_content = json.loads(annotated_content)
-    print(annotated_content)
     tokenizer.annotate_conll(annotated_content)
     return "{'submitted':true}"
 
@@ -36,9 +40,9 @@ def upload():
             pageobj = pdfReader.getPage(page)
             pages.append(pageobj.extractText())
 
-        content = "\n".join(pages)
-        tags = tokenizer.ner_tag_text(content)
-        return json.dumps({"document": content, "tags": tags})
+        content = "\n".join(pages).decode('utf-8')
+        #tags = tokenizer.ner_tag_text(content)
+        return json.dumps({"document": content})
     elif f.content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         doc = docx.Document(f)
         documentText = []
@@ -46,12 +50,14 @@ def upload():
             if para.text != "":
                 documentText.append(para.text)
         content = "\n".join(documentText);
-        tags = tokenizer.ner_tag_text(content)
-        return json.dumps({"document": content, "tags": tags})
+        #print(content)
+        #tags = tokenizer.ner_tag_text(content)
+        return json.dumps({"document": content})
     elif f.content_type == "text/plain":
         content = f.read().decode('UTF-8')
-        tags = tokenizer.ner_tag_text(content)
-        return json.dumps({"document": content, "tags": tags})
+        #tags = tokenizer.ner_tag_text(content)
+        #print(tags)
+        return json.dumps({"document": content})
     else:
         return "Content type %s not supported" % (f.content_type)
 
