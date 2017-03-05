@@ -18,7 +18,7 @@ python tator.py
 ```
 
 
-### To download  ###
+### To download <boss yad nahi a raha yeah kis k liay tha :)>  ###
 
 ```
 #!python
