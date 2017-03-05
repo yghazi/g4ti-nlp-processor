@@ -1,5 +1,13 @@
 # Configuration #
 
+```
+#!python
+
+pip install -r requirements.txt
+
+python tator.py
+
+```
 
 ```
 #!python
