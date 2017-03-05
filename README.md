@@ -1,13 +1,24 @@
 # Configuration #
 
+We assume you have installed python 3.x and its in path as well.
+
+### To install dependencies execute the below command ###
+
 ```
 #!python
 
 pip install -r requirements.txt
 
-python tator.py
-
 ```
+### To run server execute the below command ###
+```
+#!python
+
+python tator.py
+```
+
+
+### To download  ###
 
 ```
 #!python
