@@ -1,0 +1,31 @@
+APT30
+The APT30 threat actor, as dubbed by FireEye, has prosecuted a long running campaign of corporate and governmental espionage since at least 2005. They primarily target victims in Southeast Asia and India, possibly including classified government networks. Decoy documents on spear phishing emails tend toward topics related to India, Southeast Asia, border areas, and security and diplomatic issues in those areas. Of particular note, they have managed their operations well enough to continue using the same tools, tactics, and infrastructure over that period.
+TTPs
+They generally target sensitive data for exfiltration, rather than pursuing direct financial reward.
+They have developed tools to attack air-gapped networks.
+They frequently register their own CnC domains. Some have been in use for years.
+Continuous automatic updating of the malware after infection.
+Spear phishing emails often appear to originate with governmental agencies, and target both personal and organizational email accounts of the intended victims.
+Protocols Used
+HTTP (80/tcp)
+HTTPS (443/tcp)
+FTP (21/tcp)
+Malware Used
+The APT30 threat actor uses a variety of malware in its campaigns.
+NetEagle (Scout and Norton versions) -- Backdoor
+ShipShape -- Air-Gap Bridge
+SpaceShip -- Air-Gap Bridge
+FlashFlood -- Air-Gap Bridge
+Milkmaid
+Orangeade
+Creamsicle
+Backbend
+GemCutter
+Additional Indicators
+MD5
+15304d20221a26a0e413fba4c5729645
+6ee35da59f92f71e757d4d5b964ecf00
+C&Cs
+111.68.99.39
+111.68.99.87
+111.2.22.22

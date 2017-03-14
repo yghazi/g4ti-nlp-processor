@@ -1,0 +1,198 @@
+Systems Affected
+Point-of-Sale Systems
+
+Overview
+This advisory was prepared in collaboration with the National Cybersecurity and Communications Integration Center (NCCIC), United States Secret Service (USSS), Financial Sector Information Sharing and Analysis Center (FS-ISAC), and Trustwave Spiderlabs, a trusted partner under contract with the USSS.  The purpose of this release is to provide relevant and actionable technical indicators for network defense against the PoS malware dubbed "Backoff" which has been discovered exploiting businesses' administrator accounts remotely and exfiltrating consumer payment data.
+Over the past year, the Secret Service has responded to network intrusions at numerous businesses throughout the United States that have been impacted by the “Backoff” malware. Seven PoS system providers/vendors have confirmed that they have had multiple clients affected. Reporting continues on additional compromised locations, involving private sector entities of all sizes, and the Secret Service currently estimates that over 1,000 U.S. businesses are affected.
+Recent investigations revealed that malicious actors are using publicly available tools to locate businesses that use remote desktop applications. Remote desktop solutions like Microsoft's Remote Desktop (link is external)[1], Apple Remote Desktop (link is external)[2], Chrome Remote Desktop (link is external)[3], Splashtop 2 (link is external) [4], and LogMeIn (link is external)[5] offer the convenience and efficiency of connecting to a computer from a remote location. Once these applications are located, the suspects attempted to brute force the login feature of the remote desktop solution. After gaining access to what was often administrator or privileged access accounts, the suspects were then able to deploy the point-of-sale (PoS) malware and subsequently exfiltrate consumer payment data via an encrypted POST request.
+Organizations that believe they have been impacted should contact their local Secret Service field office and may contact the NCCIC for additional information.
+Description
+“Backoff” is a family of PoS malware and has been discovered recently. The malware family has been witnessed on at least three separate forensic investigations. Researchers have identified three primary variants to the “Backoff” malware including 1.4, 1.55 (“backoff”, “goo”, “MAY”, “net”), and 1.56 (“LAST”).
+These variations have been seen as far back as October 2013 and continue to operate as of July 2014. In total, the malware typically consists of the following four capabilities. An exception is the earliest witnessed variant (1.4) which does not include keylogging functionality. Additionally, 1.55 ‘net’ removed the explorer.exe injection component:
+Scraping memory for track data
+Logging keystrokes
+Command & control (C2) communication
+Injecting malicious stub into explorer.exe
+The malicious stub that is injected into explorer.exe is responsible for persistence in the event the malicious executable crashes or is forcefully stopped. The malware is responsible for scraping memory from running processes on the victim machine and searching for track data. Keylogging functionality is also present in most recent variants of “Backoff”. Additionally, the malware has a C2 component that is responsible for uploading discovered data, updating the malware, downloading/executing further malware, and uninstalling the malware.
+Variants
+Based on compiled timestamps and versioning information witnessed in the C2 HTTP POST requests, “Backoff” variants were analyzed over a seven month period. The five variants witnessed in the “Backoff” malware family have notable modifications, to include:
+1.55 “backoff”
+Added Local.dat temporary storage for discovered track data
+Added keylogging functionality
+Added “gr” POST parameter to include variant name
+Added ability to exfiltrate keylog data
+Supports multiple exfiltration domains
+Changed install path
+Changed User-Agent
+1.55 “goo”
+Attempts to remove prior version of malware
+Uses 8.8.8.8 as resolver
+1.55 “MAY”
+No significant updates other than changes to the URI and version name
+1.55 “net”
+Removed the explorer.exe injection component
+1.56 “LAST”
+Re-added the explorer.exe injection component
+Support for multiple domain/URI/port configurations
+Modified code responsible for creating exfiltration thread(s)
+Added persistence techniques
+Command & Control Communication
+All C2 communication for “Backoff” takes place via HTTP POST requests. A number of POST parameters are included when this malware makes a request to the C&C server.
+op : Static value of ‘1’
+id : randomly generated 7 character string
+ui : Victim username/hostname
+wv : Version of Microsoft Windows
+gr (Not seen in version 1.4) : Malware-specific identifier
+bv : Malware version
+data (optional) : Base64-encoded/RC4-encrypted data
+The ‘id’ parameter is stored in the following location, to ensure it is consistent across requests:
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\identifier
+If this key doesn’t exist, the string will be generated and stored. Data is encrypted using RC4 prior to being encoded with Base64. The password for RC4 is generated from the ‘id’ parameter, a static string of ‘jhgtsd7fjmytkr’, and the ‘ui’ parameter. These values are concatenated together and then hashed using the MD5 algorithm to form the RC4 password. In the above example, the RC4 password would be ‘56E15A1B3CB7116CAB0268AC8A2CD943 (The MD5 hash of ‘vxeyHkSjhgtsd7fjmytkrJosh @ PC123456).
+File Indicators:
+The following is a list of the Indicators of Compromise (IOCs) that should be added to the network security to search to see if these indicators are on their network.
+1.4
+Packed MD5: 927AE15DBF549BD60EDCDEAFB49B829E
+Unpacked MD5: 6A0E49C5E332DF3AF78823CA4A655AE8
+Install Path: %APPDATA%\AdobeFlashPlayer\mswinsvc.exe
+Mutexes:
+uhYtntr56uisGst
+uyhnJmkuTgD
+Files Written:
+%APPDATA%\mskrnl
+%APPDATA%\winserv.exe
+%APPDATA%\AdobeFlashPlayer\mswinsvc.exe
+Static String (POST Request): zXqW9JdWLM4urgjRkX
+Registry Keys:
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\identifier
+HKCU\ SOFTWARE \Microsoft\Windows\CurrentVersion\Run\Windows NT Service
+User-Agent: Mozilla/4.0
+URI(s): /aircanada/dark.php
+1.55 “backoff”
+Packed MD5: F5B4786C28CCF43E569CB21A6122A97E
+Unpacked MD5: CA4D58C61D463F35576C58F25916F258
+Install Path: %APPDATA%\AdobeFlashPlayer\mswinhost.exe
+Mutexes:
+Undsa8301nskal
+uyhnJmkuTgD
+Files Written:
+%APPDATA%\mskrnl
+%APPDATA%\winserv.exe
+%APPDATA%\AdobeFlashPlayer\mswinhost.exe
+%APPDATA%\AdobeFlashPlayer\Local.dat
+%APPDATA%\AdobeFlashPlayer\Log.txt
+Static String (POST Request): ihasd3jasdhkas
+Registry Keys:
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\identifier
+HKCU\ SOFTWARE \Microsoft\Windows\CurrentVersion\Run\Windows NT Service
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0
+URI(s): /aero2/fly.php
+1.55 “goo”
+Pa  cked MD5: 17E1173F6FC7E920405F8DBDE8C9ECAC
+Unpacked MD5: D397D2CC9DE41FB5B5D897D1E665C549
+Install Path: %APPDATA%\OracleJava\javaw.exe
+Mutexes:
+nUndsa8301nskal
+nuyhnJmkuTgD
+Files Written:
+%APPDATA%\nsskrnl
+%APPDATA%\winserv.exe
+%APPDATA%\OracleJava\javaw.exe
+%APPDATA%\OracleJava\Local.dat
+%APPDATA%\OracleJava\Log.txt
+Static String (POST Request): jhgtsd7fjmytkr
+Registry Keys:
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\identifier
+HKCU\ SOFTWARE \Microsoft\Windows\CurrentVersion\Run\Windows NT Service
+User-Agent:
+URI(s): /windows/updcheck.php
+1.55 “MAY”
+Packed MD5: 21E61EB9F5C1E1226F9D69CBFD1BF61B
+Unpacked MD5: CA608E7996DED0E5009DB6CC54E08749
+Install Path: %APPDATA%\OracleJava\javaw.exe
+Mutexes:
+nUndsa8301nskal
+nuyhnJmkuTgD
+Files Written:
+%APPDATA%\nsskrnl
+%APPDATA%\winserv.exe
+%APPDATA%\OracleJava\javaw.exe
+%APPDATA%\OracleJava\Local.dat
+%APPDATA%\OracleJava\Log.txt
+Static String (POST Request): jhgtsd7fjmytkr
+Registry Keys:
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\identifier
+HKCU\ SOFTWARE \Microsoft\Windows\CurrentVersion\Run\Windows NT Service
+User-Agent:
+URI(s): /windowsxp/updcheck.php
+1.55 “net”
+Packed MD5: 0607CE9793EEA0A42819957528D92B02
+Unpacked MD5: 5C1474EA275A05A2668B823D055858D9
+Install Path: %APPDATA%\AdobeFlashPlayer\mswinhost.exe
+Mutexes:
+nUndsa8301nskal
+Files Written:
+%APPDATA%\AdobeFlashPlayer\mswinhost.exe
+%APPDATA%\AdobeFlashPlayer\Local.dat
+%APPDATA%\AdobeFlashPlayer\Log.txt
+Static String (POST Request): ihasd3jasdhkas9
+Registry Keys:
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\identifier
+HKCU\ SOFTWARE \Microsoft\Windows\CurrentVersion\Run\Windows NT Service
+User-Agent:
+URI(s): /windowsxp/updcheck.php
+1.56 “LAST”
+Packed MD5: 12C9C0BC18FDF98189457A9D112EEBFC
+Unpacked MD5: 205947B57D41145B857DE18E43EFB794
+Install Path: %APPDATA%\OracleJava\javaw.exe
+Mutexes:
+nUndsa8301nskal
+nuyhnJmkuTgD
+Files Written:
+%APPDATA%\nsskrnl
+%APPDATA%\winserv.exe
+%APPDATA%\OracleJava\javaw.exe
+%APPDATA%\OracleJava\Local.dat
+%APPDATA%\OracleJava\Log.txt
+Static String (POST Request): jhgtsd7fjmytkr
+Registry Keys:
+HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\identifier
+HKCU\ SOFTWARE \Microsoft\Windows\CurrentVersion\Run\Windows NT Service
+HKLM\ SOFTWARE \Microsoft\Windows\CurrentVersion\Run\Windows NT Service
+HKCU\SOFTWARE\\Microsoft\Active Setup\Installed Components\{B3DB0D62-B481-4929-888B-49F426C1A136}\StubPath
+HKLM\SOFTWARE\\Microsoft\Active Setup\Installed Components\{B3DB0D62-B481-4929-888B-49F426C1A136}\StubPath
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0
+URI(s):  /windebug/updcheck.php
+Impact
+The impact of a compromised PoS system can affect both the businesses and consumer by exposing customer data such as names, mailing addresses, credit/debit card numbers, phone numbers, and e-mail addresses to criminal elements. These breaches can impact a business’ brand and reputation, while consumers’ information can be used to make fraudulent purchases or risk compromise of bank accounts. It is critical to safeguard your corporate networks and web servers to prevent any unnecessary exposure to compromise or to mitigate any damage that could be occurring now.
+Solution
+At the time this advisory is released, the variants of the “Backoff’ malware family are largely undetected by anti-virus (AV) vendors. However, shortly following the publication of this technical analysis, AV companies will quickly begin detecting the existing variants. It’s important to maintain up‐to‐date AV signatures and engines as new threats such as this are continually being added to your AV solution. Pending AV detection of the malware variants, network defenders can apply indicators of compromise (IOC) to a variety of prevention and detection strategies.[6] (link is external),[7],[8] (link is external) IOCs can be found above.
+The forensic investigations of compromises of retail IT/payment networks indicate that the network compromises allowed the introduction of memory scraping malware to the payment terminals. Information security professionals recommend a defense in depth approach to mitigating risk to retail payment systems. While some of the risk mitigation recommendations are general in nature, the following strategies provide an approach to minimize the possibility of an attack and mitigate the risk of data compromise:
+Remote Desktop Access
+Configure the account lockout settings to lock a user account after a period of time or a specified number of failed login attempts. This prevents unlimited unauthorized attempts to login whether from an unauthorized user or via automated attack types like brute force.[9] (link is external)
+Limit the number of users and workstation who can log in using Remote Desktop.
+Use firewalls (both software and hardware where available) to restrict access to remote desktop listening ports (default is TCP 3389).[10] (link is external)
+Change the default Remote Desktop listening port.
+Define complex password parameters. Configuring an expiration time and password length and complexity can decrease the amount of time in which a successful attack can occur.[11] (link is external)
+Require two-factor authentication (2FA) for remote desktop access.[12]
+Install a Remote Desktop Gateway to restrict access.[13] (link is external)
+Add an extra layer of authentication and encryption by tunneling your Remote Desktop through IPSec, SSH or SSL.[14] (link is external),[15] (link is external)
+Require 2FA when accessing payment processing networks. Even if a virtual private network is used, it is important that 2FA is implemented to help mitigate keylogger or credential dumping attacks.
+Limit administrative privileges for users and applications.
+Periodically review systems (local and domain controllers) for unknown and dormant users.
+Network Security
+Review firewall configurations and ensure that only allowed ports, services and Internet protocol (IP) addresses are communicating with your network. This is especially critical for outbound (e.g., egress) firewall rules in which compromised entities allow ports to communicate to any IP address on the Internet. Hackers leverage this configuration to exfiltrate data to their IP addresses.
+Segregate payment processing networks from other networks.
+Apply access control lists (ACLs) on the router configuration to limit unauthorized traffic to payment processing networks.
+Create strict ACLs segmenting public-facing systems and back-end database systems that house payment card data.
+Implement data leakage prevention/detection tools to detect and help prevent data exfiltration.
+Implement tools to detect anomalous network traffic and anomalous behavior by legitimate users (compromised credentials).
+Cash Register and PoS Security
+Implement hardware-based point-to-point encryption. It is recommended that EMV-enabled PIN entry devices or other credit-only accepting devices have Secure Reading and Exchange of Data (SRED) capabilities. SRED-approved devices can be found at the Payment Card Industry Security Standards website.
+Install Payment Application Data Security Standard-compliant payment applications.
+Deploy the latest version of an operating system and ensure it is up to date with security patches, anti-virus software, file integrity monitoring and a host-based intrusion-detection system.
+Assign a strong password to security solutions to prevent application modification. Use two-factor authentication (2FA) where feasible.
+Perform a binary or checksum comparison to ensure unauthorized files are not installed.
+Ensure any automatic updates from third parties are validated. This means performing a checksum comparison on the updates prior to deploying them on PoS systems. It is recommended that merchants work with their PoS vendors to obtain signatures and hash values to perform this checksum validation.
+Disable unnecessary ports and services, null sessions, default users and guests.
+Enable logging of events and make sure there is a process to monitor logs on a daily basis.
+Implement least privileges and ACLs on users and applications on the system.

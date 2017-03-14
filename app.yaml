@@ -1,0 +1,4 @@
+base_path: ~/PycharmProjects/g4ti-nlp-processor
+train_data_path: g4ti-corpus
+test_path: test
+train_model_path: g4ti-chunker.pickle

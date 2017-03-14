@@ -1,13 +1,13 @@
 The	DT	O
-Carbanak	NNP	O
+Carbanak	NNP	B-ACTOR
 group	NN	O
 is	VBZ	O
 infamous	JJ	O
 for	IN	O
 infiltrating	VBG	O
 various	JJ	O
-financial	JJ	O
-institutions	NNS	O
+financial	JJ	B-INDUSTRY
+institutions	NNS	I-INDUSTRY
 ,	,	O
 and	CC	O
 stealing	VBG	B-GOAL

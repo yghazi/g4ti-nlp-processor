@@ -1,0 +1,7 @@
+Flask>=0.12
+Flask-Cors>=3.0.2
+Flask-RESTful>=0.3.5
+nltk>=3.2.2
+PyPDF2>=1.26.0
+python-docx>=0.8.6
+PyDrive>1.3

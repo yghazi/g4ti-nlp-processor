@@ -6,11 +6,11 @@ from nltk import word_tokenize, sent_tokenize, pos_tag
 from nltk.chunk import tree2conlltags
 from nltk.corpus.reader import ConllChunkCorpusReader, pickle
 
-from g4ti import custom_trainer
+from g4ti.nlp import custom_trainer
 
-TRAIN_DATA_PATH = 'g4ti-corpus'
+TRAIN_DATA_PATH = '../g4ti-corpus'
 
-TEST_PATH = 'test'
+TEST_PATH = '../test'
 
 TRAIN_MODEL_PICKLE = 'g4ti-chunker.pickle'
 
@@ -95,8 +95,9 @@ def stanford_to_conll():
 
 def annotate_conll(annotated_content):
     """
-    Properly formats annotated content in CONLL style (word  pos-tag  ner-label),
-    and writes it to file to make it part of the corpus
+    Properly formats annotated content in CONLL style
+    (word  pos-tag  ner-label), and writes it to file
+    to make it part of the training corpus.
     :param annotated_content: the required content dictionary
     :return:
     """
@@ -159,9 +160,22 @@ def ner_tag_text(text):
     return tree2conlltags(chunker_pickle.parse(pos_tag(word_tokenize(text))))
 
 
+
+
 #train_and_pickle()
-# test_ner()
+#test_ner()
 # while True:
 #    print("Train again...")
 #    train_and_pickle()
 #    time.sleep(60 * 60 * 2) # TODO: Will retrain every 2 hours.. need to make this configurable
+
+# content = ""
+# with open("APT30.txt", encoding='utf-8') as file:
+#     content = file.read();
+#     file.close()
+#
+# pos = pos_tag(word_tokenize(content))
+# print(pos)
+
+
+
