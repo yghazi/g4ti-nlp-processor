@@ -139,12 +139,8 @@ def annotate_conll(annotated_content):
             file_content += "{}\t{}\t{}\n".format(token, pos, label)
     # write to file: tagged iob data in train data path and text in raw data path
     file_name = get_file_name(content)
-    with open(TRAIN_DATA_PATH + "/" + file_name + '.iob', 'w') as train_file:
-        train_file.write(file_content)
-        train_file.close()
-    with open(RAW_DATA_PATH + "/" + file_name + '.txt', 'w') as train_file:
-        train_file.write(content)
-        train_file.close()
+    save_file(file_name, file_content)
+    save_file(file_name, content)
 
 
 def save_file(file_name, file_content, train=True):
