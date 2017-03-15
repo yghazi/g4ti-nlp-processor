@@ -1,6 +1,8 @@
 import codecs
 import os
-import time
+import hashlib
+
+from g4ti.api import corpus_file_util
 
 from nltk import word_tokenize, sent_tokenize, pos_tag
 from nltk.chunk import tree2conlltags
@@ -8,11 +10,17 @@ from nltk.corpus.reader import ConllChunkCorpusReader, pickle
 
 from g4ti.nlp import custom_trainer
 
-TRAIN_DATA_PATH = '../g4ti-corpus'
+from g4ti import constants
 
-TEST_PATH = '../test'
+TRAIN_DATA_PATH = constants.G4TI_TRAINING_DIR
 
-TRAIN_MODEL_PICKLE = 'g4ti-chunker.pickle'
+RAW_DATA_PATH = constants.G4TI_RAW_DIR
+
+TEST_PATH = constants.TEST_DIR
+
+TRAIN_MODEL_PICKLE = constants.TRAIN_MODEL
+
+digest = hashlib.sha1()
 
 dic = {
     "text": "First, you need a web server like Nginx or Apache. You should configure your web server so that it sends "
@@ -29,8 +37,9 @@ dic = {
 }
 
 
-def current_milli_time():
-    return str(round(time.time() * 1000))
+def get_file_name(content):
+    digest.update(content.encode('utf-8'))
+    return digest.hexdigest()
 
 
 def save_train_file(text):
@@ -40,7 +49,7 @@ def save_train_file(text):
     :return:
     """
     sentences = sent_tokenize(text)
-    file = open(TRAIN_DATA_PATH + current_milli_time(), 'w')
+    file = open(TRAIN_DATA_PATH + get_file_name(text), 'w')
     file_content = ''
     for sentence in sentences:
         tokens = word_tokenize(sentence)
@@ -90,7 +99,7 @@ def stanford_to_conll():
                 for w, t in pos_tagged:
                     ne = tags.get(w, "O")
                     content += "{}\t{}\t{}\n".format(w, t, ne)
-            open(TRAIN_DATA_PATH + "/" + current_milli_time() + ".tags", 'w').write(content)
+            open(TRAIN_DATA_PATH + "/" + get_file_name(text) + ".tags", 'w').write(content)
 
 
 def annotate_conll(annotated_content):
@@ -128,12 +137,43 @@ def annotate_conll(annotated_content):
             else:
                 label = 'O'
             file_content += "{}\t{}\t{}\n".format(token, pos, label)
-    with open(TRAIN_DATA_PATH + "/" + current_milli_time() + '.iob', 'w') as train_file:
+    # write to file: tagged iob data in train data path and text in raw data path
+    file_name = get_file_name(content)
+    with open(TRAIN_DATA_PATH + "/" + file_name + '.iob', 'w') as train_file:
         train_file.write(file_content)
+        train_file.close()
+    with open(RAW_DATA_PATH + "/" + file_name + '.txt', 'w') as train_file:
+        train_file.write(content)
         train_file.close()
 
 
+def save_file(file_name, file_content, train=True):
+    if file_content is not None:
+        drive_folder = constants.DRIVE_CORPUS_FOLDER_ID
+        path = TRAIN_DATA_PATH
+        ext = '.iob'
+        if not train:
+            drive_folder = constants.DRIVE_RAWDOCS_FOLDER_ID
+            path = RAW_DATA_PATH
+            ext = '.txt'
+    file_path = path + os.sep + file_name + ext
+    # write temporarily to the folder
+    with open(file_path, 'w') as f:
+        f.write(file_content)
+    if corpus_file_util.upload_file(drive_folder, file_name + ext, file_path):
+        print("Great.. file uploaded")
+        # OK to remove file
+        os.remove(file_path)
+
+    else:
+        print("what the hell?")
+
+
 def train_and_pickle():
+    """
+    Train model on provided corpus and save serialized corpus as pickle
+    :return:
+    """
     samples = get_training_samples()
     chunker = custom_trainer.NamedEntityChunker(samples)
     chunker_pickle = open(TRAIN_MODEL_PICKLE, 'wb')
@@ -159,11 +199,8 @@ def ner_tag_text(text):
     pickle_file.close()
     return tree2conlltags(chunker_pickle.parse(pos_tag(word_tokenize(text))))
 
-
-
-
-#train_and_pickle()
-#test_ner()
+# train_and_pickle()
+# test_ner()
 # while True:
 #    print("Train again...")
 #    train_and_pickle()
@@ -177,5 +214,4 @@ def ner_tag_text(text):
 # pos = pos_tag(word_tokenize(content))
 # print(pos)
 
-
-
+save_file("file", "content")

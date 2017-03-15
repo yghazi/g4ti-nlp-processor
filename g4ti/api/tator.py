@@ -8,15 +8,26 @@ from g4ti.api import corpus_file_util
 
 from g4ti.nlp import tokenizer
 
-
 app = Flask(__name__)
 CORS(app)
 
 
 @app.route('/')
 def welcome():
-    corpus_file_util.google_auth()
     return "Welcome to tator api"
+
+
+@app.route('/api/oauth-url')
+def oauth_for_drive():
+    return corpus_file_util.get_authentication_url()
+
+
+@app.route('/api/oauth-code', methods=['POST'])
+def oauth_set_code():
+    code = request.get_data()
+    is_auth = corpus_file_util.set_authentication_code(code)
+    return "{'auth': %r }" % is_auth
+
 
 @app.route("/api/tags")
 def tags():
@@ -66,5 +77,6 @@ def upload():
         return "Content type %s not supported" % (f.content_type)
 
 
-if __name__ == '__main__':
+def run():
+    """ Run app """
     app.run()
