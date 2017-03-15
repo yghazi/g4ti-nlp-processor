@@ -1,6 +1,7 @@
 import codecs
 import os
 import hashlib
+import time
 
 from g4ti.api import corpus_file_util
 
@@ -22,6 +23,8 @@ TRAIN_MODEL_PICKLE = constants.TRAIN_MODEL
 
 digest = hashlib.sha1()
 
+last_pending_check = round(time.time() * 1000)
+
 dic = {
     "text": "First, you need a web server like Nginx or Apache. You should configure your web server so that it sends "
             "all appropriate requests to one PHP file. You instantiate and run your Slim app in this PHP file.",
@@ -35,6 +38,10 @@ dic = {
             "nextWords": "file"}
     }
 }
+
+
+def current_milli_time():
+    return str(round(time.time() * 1000))
 
 
 def get_file_name(content):
@@ -157,12 +164,24 @@ def save_file(file_name, file_content, train=True):
     with open(file_path, 'w') as f:
         f.write(file_content)
     if corpus_file_util.upload_file(drive_folder, file_name + ext, file_path):
-        print("Great.. file uploaded")
+        print("File %s uploaded" % file_name + ext)
         # OK to remove file
         os.remove(file_path)
-
+        # check for pending uploads, if 15 min have passed since last check
+        if (current_milli_time() - last_pending_check) > 900000:
+            upload_pending_files(path, drive_folder)
     else:
         print("what the hell?")
+
+
+def upload_pending_files(path, uplink_folder_id):
+    pending_files = os.listdir(path)
+    if pending_files:
+        for f in pending_files:
+            file = path + os.sep + f
+            is_uploaded = corpus_file_util.upload_file(folder_id=uplink_folder_id, file_name=f, file=file)
+            if is_uploaded:
+                os.remove(file)
 
 
 def train_and_pickle():
@@ -210,4 +229,4 @@ def ner_tag_text(text):
 # pos = pos_tag(word_tokenize(content))
 # print(pos)
 
-save_file("file", "content")
+# upload_pending_files(TRAIN_DATA_PATH, constants.DRIVE_CORPUS_FOLDER_ID)
