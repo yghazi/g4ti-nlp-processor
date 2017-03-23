@@ -54,7 +54,7 @@
 	"tag": "LATMOVEMENT"
 }, {
 	"name": "ATT&CK Execution",
-	"tag": "EXECUTION
+	"tag": "EXECUTION"
 }, {
 	"name": "ATT&CK Collection",
 	"tag": "COLLECTION"
