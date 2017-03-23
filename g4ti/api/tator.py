@@ -7,6 +7,7 @@ from flask_cors import CORS
 from g4ti.api import corpus_file_util
 
 from g4ti.nlp import tokenizer
+from g4ti import constants
 
 app = Flask(__name__)
 CORS(app)
@@ -31,7 +32,7 @@ def oauth_set_code():
 
 @app.route("/api/tags")
 def tags():
-    with open('tags.json') as f:
+    with open(constants.BASE_DIR + '/tags.json') as f:
         return f.read()
     return '[{"tags":"null"}]'
 

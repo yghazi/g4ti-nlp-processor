@@ -1,69 +1,97 @@
 [{
-	"name": "Actor"
+	"name": "Actor",
+        "tag": "ACTOR"
 }, {
-	"name": "Industry"
+	"name": "Victim Industry",
+	"tag": "INDUSTRY"
 }, {
-	"name": "Country"
+	"name": "Victim Country",
+	"tag": "COUNTRY"
 }, {
-	"name": "Discovered On"
+	"name": "Attacker Infrastructure Type",
+	"tag": "INFRASTRUCTURE"
 }, {
-	"name": "Attacker Infrastructure Type"
+	"name": "Intended Effect",
+	"tag" : "EFFECT"
 }, {
-	"name": "Intended Effect"
+	"name": "Threat Information Source",
+	"tag": "SOURCE"
 }, {
-	"name": "Source"
+	"name": "Technique",
+	"tag": "TECHNIQUE"
 }, {
-	"name": "Technique"
+	"name": "Reconnaissance Information",
+	"tag": "RECONINFO"
 }, {
-	"name": "Information"
+	"name": "Victim OS",
+        "tag": "OS"
 }, {
-	"name": "OS"
+	"name": "Tool Used",
+	"tag": "TOOL"
 }, {
-	"name": "Tools"
+	"name": "Malware Name",
+	"tag": "MALWARE"
 }, {
-	"name": "Malware Name"
+	"name": "Malware Family",
+	"tag": "MALFAMILY"
 }, {
-	"name": "Malware Family"
+	"name": "Delivery Method",
+	"tag": "DELIVERY"
 }, {
-	"name": "Delivery Method"
+	"name": "ATT&CK Persistence",
+	"tag": "PERSISTENCE"
 }, {
-	"name": "Persistence"
+	"name": "ATT&CK Privilege Escalation",
+	"tag": "PRIVESCALATION"
 }, {
-	"name": "Privilege Escalation"
+	"name": "ATT&CK Defense Evasion",
+	"tag": "EVASION"
 }, {
-	"name": "Defense Evasion"
+	"name": "ATT&CK Credential Access",
+	"tag": "CREDACCESS"
 }, {
-	"name": "Credential Access"
+	"name": "ATT&CK Lateral Movement",
+	"tag": "LATMOVEMENT"
 }, {
-	"name": "Lateral Movement"
+	"name": "ATT&CK Execution",
+	"tag": "EXECUTION
 }, {
-	"name": "Execution"
+	"name": "ATT&CK Collection",
+	"tag": "COLLECTION"
 }, {
-	"name": "Collection"
+	"name": "ATT&CK Exfiltration",
+	"tag": "EXFIL"
 }, {
-	"name": "Exfiltration"
+	"name": "ATT&CK Command and Control",
+	"tag": "CNC"
 }, {
-	"name": "Command and Control"
+	"name": "Hash",
+	"tag": "HASH"
 }, {
-	"name": "Hash"
+	"name": "IP Address",
+	"tag": "IP"
 }, {
-	"name": "IP Address"
+	"name": "Domain Name",
+	"tag": "DOMAIN"
 }, {
-	"name": "Domain Name"
+	"name": "URL",
+	"tag": "URL"
 }, {
-	"name": "URL"
+	"name": "Files/Directories Modified",
+	"tag": "FILE"
 }, {
-	"name": "Files/Folders"
+	"name": "Registry Key",
+	"tag": "REGKEY"
 }, {
-	"name": "URL"
+	"name": "API/DLL",
+	"tag": "APIDLL"
 }, {
-	"name": "Reg Entry"
+	"name": "Mutex",
+	"tag": "MUTEX"
 }, {
-	"name": "API/DLL"
+	"name": "Network Packet Information",
+	"tag": "NETPACKET"
 }, {
-	"name": "Mutexes"
-}, {
-	"name": "Network Packet Information"
-}, {
-	"name": "Application Layer/Protocol Information"
+	"name": "Application Layer/Protocol Information",
+	"tag": "PROTOCOL"
 }]
