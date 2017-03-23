@@ -219,7 +219,9 @@ def ner_tag_text(text):
 # while True:
 #    print("Train again...")
 #    train_and_pickle()
-#    time.sleep(60 * 60 * 2) # TODO: Will retrain every 2 hours.. need to make this configurable
+#    time.sleep(60 * 60 * 2)
+#
+#  TODO: Will retrain every 2 hours.. need to make this configurable
 
 # content = ""
 # with open("APT30.txt", encoding='utf-8') as file:
