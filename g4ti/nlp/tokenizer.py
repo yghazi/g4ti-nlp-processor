@@ -41,7 +41,7 @@ dic = {
 
 
 def current_milli_time():
-    return str(round(time.time() * 1000))
+    return round(time.time() * 1000)
 
 
 def get_file_name(content):
@@ -68,7 +68,7 @@ def save_train_file(text):
 
 
 def get_training_samples():
-    _reader = ConllChunkCorpusReader(TRAIN_DATA_PATH, r'.*\.iob$', chunk_types='LP')
+    _reader = ConllChunkCorpusReader(TRAIN_DATA_PATH, r'.*\.tsv$', chunk_types='LP')
     l = []
     for x in _reader.iob_sents():
         y = []
@@ -146,15 +146,17 @@ def annotate_conll(annotated_content):
             file_content += "{}\t{}\t{}\n".format(token, pos, label)
     # write to file: tagged iob data in train data path and text in raw data path
     file_name = get_file_name(content)
+    # save iob annotated file
     save_file(file_name, file_content)
-    save_file(file_name, content)
+    # save txt file
+    save_file(file_name, content, False)
 
 
 def save_file(file_name, file_content, train=True):
     if file_content is not None:
         drive_folder = constants.DRIVE_CORPUS_FOLDER_ID
         path = TRAIN_DATA_PATH
-        ext = '.iob'
+        ext = '.tsv'
         if not train:
             drive_folder = constants.DRIVE_RAWDOCS_FOLDER_ID
             path = RAW_DATA_PATH
