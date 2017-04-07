@@ -2,6 +2,8 @@ import codecs
 import os
 import hashlib
 import time
+import re
+import unicodedata
 
 from g4ti.api import corpus_file_util
 
@@ -109,6 +111,27 @@ def stanford_to_conll():
             open(TRAIN_DATA_PATH + "/" + get_file_name(text) + ".tags", 'w').write(content)
 
 
+def pattern_token(word):
+    pattern_tag = ''
+    if re.match(
+            '((?<![0-9])(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})[.](?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})[.](?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})[.](?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})(?![0-9]))',
+            word):
+        pattern_tag = 'B-IP'
+    elif re.match('((?:[a-zA-Z0-9.]+)@(?:[a-z]+.)(?:[a-z]{2,62}.[a-z]{2}|[a-z]{2,62}))', word):
+        pattern_tag = 'B-EMAIL'
+    elif re.match('((?:[HK][A-Z\_]+|[A-Z]+)\+\s+(?:.*)\+[a-zA-Z]+)', word):
+        pattern_tag = 'B-REGKEY'
+    elif re.match('[a-hA-H0-9]', word) and (len(word) % 32 == 0 or len(word) % 40 == 0):
+        pattern_tag = 'B-HASH'
+    elif re.match('(?:[a-z0-9\-]+\.)(?:[a-z]{2,18}\.[a-z]{2}|[a-z]{2,18})', word):
+        pattern_tag = 'B-URL'
+    elif re.match('[a-zA-Z0-9\_\-]+(?:\.|\[(?:dot|\.)])+[a-zA-Z+\.\[\]]+', word):
+        pattern_tag = 'B-DOMAIN'
+    elif re.match('CVE-\d{4}-\d{4}', word):
+        pattern_tag = 'B-CVE'
+    return pattern_tag
+
+
 def annotate_conll(annotated_content):
     """
     Properly formats annotated content in CONLL style
@@ -118,32 +141,53 @@ def annotate_conll(annotated_content):
     :return:
     """
     content = annotated_content['text']
+    content = unicodedata.normalize('NFKD', content).encode('ascii', 'ignore').decode()
     meta = dict(annotated_content['metadata'])
     sentences = sent_tokenize(content)
     file_content = ''
     for sentence in sentences:
-        subseq_tokens = []
         sent_tokens = word_tokenize(sentence)
         sent_pos = list(pos_tag(sent_tokens))
-        for i, token in enumerate(sent_tokens):
+        i = 0
+        while i < sent_tokens.__len__():
+            step = 1
+            subseq_tokens = ""
+            token = sent_tokens[i]
             meta_token = meta.get(token, None)
             pos = sent_pos.__getitem__(i)[1]
 
-            if token in subseq_tokens:
-                subseq_tokens.remove(token)
-                label = "I-" + prev_label
-            elif meta_token is not None:
-                nextWords = str(meta_token.get('nextWords', None))
+            # if meta_token is something else
+            if meta_token is not None:
+                nextWords = meta_token.get('nextWords', None)
                 ne_tag = meta_token.get('tag', None)
                 if ne_tag is None:
                     raise Exception("What the hell? Tag is None.")
                 label = "B-" + ne_tag
-                prev_label = ne_tag
+                # prev_label = ne_tag
                 if nextWords is not None:
-                    subseq_tokens = nextWords.split(" ")
+                    length = nextWords.__len__()
+                    if length > 0:
+                        # check each combination of nextwords for the presence of exactly the same subsequent words
+                        y = i + 1
+                        # TODO: make sure index doesn't go out of bounds
+                        for combo in filter(lambda n: sent_tokens[y: y +  n.__len__()] == n, nextWords):
+                            for c in combo:
+                                subseq_tokens += "{}\t{}\t{}\n".format(c, sent_pos.__getitem__(y)[1], 'I-' + ne_tag)
+                                y += 1
+                        step = step if not subseq_tokens else combo.__len__() + step
+
+
             else:
-                label = 'O'
+                # if no tag assigned, check against pattern
+                # or else, assign 'O'
+                label = pattern_token(token)
+                label = label if label else 'O'
+
             file_content += "{}\t{}\t{}\n".format(token, pos, label)
+            if subseq_tokens:
+                file_content += subseq_tokens
+            i += step
+
     # write to file: tagged iob data in train data path and text in raw data path
     file_name = get_file_name(content)
     # save iob annotated file
@@ -167,8 +211,8 @@ def save_file(file_name, file_content, train=True):
         f.write(file_content)
     if corpus_file_util.upload_file(drive_folder, file_name + ext, file_path):
         print("File %s uploaded" % file_name + ext)
-        # OK to remove file
-        os.remove(file_path)
+        # TODO: OK to remove file, when in production
+        # os.remove(file_path)
         # check for pending uploads, if 15 min have passed since last check
         if (current_milli_time() - last_pending_check) > 900000:
             upload_pending_files(path, drive_folder)
@@ -216,6 +260,7 @@ def ner_tag_text(text):
     pickle_file.close()
     return tree2conlltags(chunker_pickle.parse(pos_tag(word_tokenize(text))))
 
+
 # train_and_pickle()
 # test_ner()
 # while True:
@@ -223,14 +268,4 @@ def ner_tag_text(text):
 #    train_and_pickle()
 #    time.sleep(60 * 60 * 2)
 #
-#  TODO: Will retrain every 2 hours.. need to make this configurable
-
-# content = ""
-# with open("APT30.txt", encoding='utf-8') as file:
-#     content = file.read();
-#     file.close()
-#
-# pos = pos_tag(word_tokenize(content))
-# print(pos)
-
 # upload_pending_files(TRAIN_DATA_PATH, constants.DRIVE_CORPUS_FOLDER_ID)

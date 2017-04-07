@@ -1,6 +1,6 @@
 [{
 	"name": "Actor",
-        "tag": "ACTOR"
+     "tag": "ACTOR"
 }, {
 	"name": "Victim Industry",
 	"tag": "INDUSTRY"
@@ -17,14 +17,24 @@
 	"name": "Threat Information Source",
 	"tag": "SOURCE"
 }, {
-	"name": "Technique",
+	"name": "TTP/Technique",
 	"tag": "TECHNIQUE"
 }, {
 	"name": "Reconnaissance Information",
 	"tag": "RECONINFO"
 }, {
 	"name": "Victim OS",
-        "tag": "OS"
+    "tag": "OS"
+}, {
+	"name": "Vulnerability",
+	"tag": "VULN"
+
+}, {
+	"name": "Victim Application",
+	"tag": "APP"
+}, {
+	"name": "Victim Protocol",
+	"tag": "PROTOCOL"
 }, {
 	"name": "Tool Used",
 	"tag": "TOOL"
@@ -32,9 +42,8 @@
 	"name": "Malware Name",
 	"tag": "MALWARE"
 }, {
-        "name":"Attacker Goal",
+    "name":"Attacker Goal",
 	"tag":"GOAL"
-
 }, {
 	"name": "Malware Family",
 	"tag": "MALFAMILY"
@@ -95,7 +104,5 @@
 }, {
 	"name": "Network Packet Information",
 	"tag": "NETPACKET"
-}, {
-	"name": "Application Layer/Protocol Information",
-	"tag": "PROTOCOL"
-}]
+}
+]
