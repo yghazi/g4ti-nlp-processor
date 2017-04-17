@@ -165,7 +165,7 @@ def tokenize_with_patterns(sentence):
     print(sentence)
     words = tokenizer.tokenize(sentence)
     # TODO: add check for sentence being empty or None?!
-    # particularly for the troublesome patterns
+    # particularly for the troublesome patterns.json
     pattern_matches = []
     if URL_PATTERN.search(sentence):
         pattern_matches = URL_PATTERN.findall(sentence)

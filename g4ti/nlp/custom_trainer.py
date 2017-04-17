@@ -4,8 +4,7 @@ from collections import Iterable
 from nltk import conlltags2tree, SnowballStemmer
 from nltk.tag import ClassifierBasedTagger
 from nltk.chunk import ChunkParserI
-
-
+from g4ti.nlp.util import PatternUtil
 # init the stemmer
 stemmer = SnowballStemmer('english')
 
@@ -92,7 +91,13 @@ def ner_features(tokens, index, history):
 
 def shape(word):
     word_shape = 'other'
-    if re.match('[0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+$', word):
+
+    for pattern in PatternUtil().getPatterns():
+        if pattern["pattern"].match(word):
+            word_shape = pattern["name"]
+
+
+    """if re.match('[0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+$', word):
         word_shape = 'number'
     elif re.match('\W+$', word):
         word_shape = 'punct'
@@ -124,4 +129,7 @@ def shape(word):
         word_shape = 'md5'
     elif re.match('(?:[a-z0-9\-]+\.)(?:[a-z]{2,18}\.[a-z]{2}|[a-z]{2,18})', word):
         word_shape = 'url'
+    """
+
+    print(word_shape)
     return word_shape
