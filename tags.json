@@ -2,11 +2,11 @@
 	"name": "Actor",
      "tag": "ACTOR"
 }, {
-	"name": "Victim Industry",
+	"name": "Target Industry",
 	"tag": "INDUSTRY"
 }, {
-	"name": "Victim Country",
-	"tag": "COUNTRY"
+	"name": "Target Location",
+	"tag": "LOCATION"
 }, {
 	"name": "Attacker Infrastructure Type",
 	"tag": "INFRASTRUCTURE"
@@ -23,17 +23,17 @@
 	"name": "Reconnaissance Information",
 	"tag": "RECONINFO"
 }, {
-	"name": "Victim OS",
+	"name": "Target OS",
     "tag": "OS"
 }, {
 	"name": "Vulnerability",
 	"tag": "VULN"
 
 }, {
-	"name": "Victim Application",
+	"name": "Target Application",
 	"tag": "APP"
 }, {
-	"name": "Victim Protocol",
+	"name": "Target Protocol",
 	"tag": "PROTOCOL"
 }, {
 	"name": "Tool Used",
