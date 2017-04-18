@@ -207,7 +207,7 @@ def create_tokenizer(nlp):
 
 tokenizer = spacy.load('en', create_make_doc=create_tokenizer)
 
-
+## DRIVE.. corpus_file_util
 def save_file(file_name, file_content, train=True):
     if file_content is not None:
         drive_folder = constants.DRIVE_CORPUS_FOLDER_ID
@@ -244,7 +244,7 @@ def upload_pending_files(path, uplink_folder_id):
 
 
 
-
+## Training
 
 def test_ner():
     with open(TEST_PATH + '/carbanak-test.txt') as test:
