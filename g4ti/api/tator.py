@@ -6,13 +6,14 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from g4ti import constants
-from g4ti.api import corpus_file_util
+from g4ti.helpers.drive_helper import DriveHelper
 from g4ti.nlp.annotator import Annotator
 
 app = Flask(__name__)
 CORS(app)
 
 annotator = Annotator()
+drive_helper = DriveHelper()
 
 @app.route('/')
 def welcome():
@@ -21,13 +22,13 @@ def welcome():
 
 @app.route('/api/oauth-url')
 def oauth_for_drive():
-    return corpus_file_util.get_authentication_url()
+    return drive_helper.get_authentication_url()
 
 
 @app.route('/api/oauth-code', methods=['POST'])
 def oauth_set_code():
     code = request.get_data()
-    is_auth = corpus_file_util.set_authentication_code(code)
+    is_auth = drive_helper.set_authentication_code(code)
     return "{'auth': %r }" % is_auth
 
 
