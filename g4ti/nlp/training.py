@@ -1,22 +1,19 @@
 from nltk.corpus.reader import ConllChunkCorpusReader, pickle
 
-from g4ti import constants
+from g4ti.helpers.config_helper import ConfigHelper
 from g4ti.nlp import custom_trainer
 
 
 class Training:
-    TRAIN_DATA_PATH = constants.G4TI_TRAINING_DIR
-    TRAIN_MODEL_PICKLE = constants.TRAIN_MODEL
-
     def __int__(self):
-        print("")
+        self.config_helper = ConfigHelper()
 
     def get_training_samples(self):
         """
         Get training samples
         :return:
         """
-        _reader = ConllChunkCorpusReader(self.TRAIN_DATA_PATH, r'.*\.tsv$', chunk_types='LP')
+        _reader = ConllChunkCorpusReader(self.config_helper.TRAIN_DATA_PATH, r'.*\.tsv$', chunk_types='LP')
         l = []
         for x in _reader.iob_sents():
             y = []
@@ -33,6 +30,6 @@ class Training:
         # TODO: change to crf training.. might want to change features and lemmatize before training
         samples = self.get_training_samples()
         chunker = custom_trainer.NamedEntityChunker(samples)
-        chunker_pickle = open(self.TRAIN_MODEL_PICKLE, 'wb')
+        chunker_pickle = open(self.config_helper.TRAIN_MODEL_PICKLE, 'wb')
         pickle.dump(chunker, chunker_pickle)
         chunker_pickle.close()
