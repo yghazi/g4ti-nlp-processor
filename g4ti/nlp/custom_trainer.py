@@ -1,11 +1,10 @@
-import re
 from collections import Iterable
 
 from nltk import conlltags2tree, SnowballStemmer
-from nltk.tag import ClassifierBasedTagger
 from nltk.chunk import ChunkParserI
+from nltk.tag import ClassifierBasedTagger
 
-
+from g4ti.helpers.config_helper import PatternUtil
 # init the stemmer
 stemmer = SnowballStemmer('english')
 
@@ -92,36 +91,10 @@ def ner_features(tokens, index, history):
 
 def shape(word):
     word_shape = 'other'
-    if re.match('[0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+$', word):
-        word_shape = 'number'
-    elif re.match('\W+$', word):
-        word_shape = 'punct'
-    elif re.match('[A-Z][a-z]+$', word):
-        word_shape = 'capitalized'
-    elif re.match('[A-Z]+$', word):
-        word_shape = 'uppercase'
-    elif re.match('[a-z]+$', word):
-        word_shape = 'lowercase'
-    elif re.match('[A-Z][a-z]+[A-Z][a-z]+[A-Za-z]*$', word):
-        word_shape = 'camelcase'
-    elif re.match('[A-Za-z]+$', word):
-        word_shape = 'mixedcase'
-    elif re.match('__.+__$', word):
-        word_shape = 'wildcard'
-    elif re.match('[A-Za-z0-9]+\.$', word):
-        word_shape = 'ending-dot'
-    elif re.match('[A-Za-z0-9]+\.[A-Za-z0-9\.]+\.$', word):
-        word_shape = 'abbreviation'
-    elif re.match('[A-Za-z0-9]+\-[A-Za-z0-9\-]+.*$', word):
-        word_shape = 'contains-hyphen'
-    elif re.match('((?<![0-9])(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})[.](?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})[.](?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})[.](?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})(?![0-9]))', word):
-        word_shape = 'ip'
-    elif re.match('((?:[a-zA-Z0-9.]+)@(?:[a-z]+.)(?:[a-z]{2,62}.[a-z]{2}|[a-z]{2,62}))', word):
-        word_shape = 'email'
-    elif re.match('((?:[HK][A-Z\_]+|[A-Z]+)\+\s+(?:.*)\+[a-zA-Z]+)', word):
-        word_shape = 'registry-key'
-    elif re.match('[a-hA-H0-9]{32}', word):
-        word_shape = 'md5'
-    elif re.match('(?:[a-z0-9\-]+\.)(?:[a-z]{2,18}\.[a-z]{2}|[a-z]{2,18})', word):
-        word_shape = 'url'
+
+    for pattern in PatternUtil().getPatterns():
+        if pattern["pattern"].match(word):
+            word_shape = pattern["name"]
+            break
+
     return word_shape
