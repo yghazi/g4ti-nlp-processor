@@ -45,37 +45,7 @@
     "name":"Attacker Goal",
 	"tag":"GOAL"
 }, {
-	"name": "Malware Family",
-	"tag": "MALFAMILY"
-}, {
-	"name": "Delivery Method",
-	"tag": "DELIVERY"
-}, {
-	"name": "ATT&CK Persistence",
-	"tag": "PERSISTENCE"
-}, {
-	"name": "ATT&CK Privilege Escalation",
-	"tag": "PRIVESCALATION"
-}, {
-	"name": "ATT&CK Defense Evasion",
-	"tag": "EVASION"
-}, {
-	"name": "ATT&CK Credential Access",
-	"tag": "CREDACCESS"
-}, {
-	"name": "ATT&CK Lateral Movement",
-	"tag": "LATMOVEMENT"
-}, {
-	"name": "ATT&CK Execution",
-	"tag": "EXECUTION"
-}, {
-	"name": "ATT&CK Collection",
-	"tag": "COLLECTION"
-}, {
-	"name": "ATT&CK Exfiltration",
-	"tag": "EXFIL"
-}, {
-	"name": "ATT&CK Command and Control",
+	"name": "Command and Control Communication",
 	"tag": "CNC"
 }, {
 	"name": "Hash",

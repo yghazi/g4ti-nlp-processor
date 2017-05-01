@@ -10,5 +10,6 @@ G4TI_TRAINING_DIR = BASE_DIR + os.sep + 'g4ti-corpus' + os.sep + 'train'
 G4TI_RAW_DIR = BASE_DIR + os.sep + 'g4ti-corpus' + os.sep + 'raw'
 TEST_DIR = BASE_DIR + os.sep + 'test'
 
-DRIVE_CORPUS_FOLDER_ID = '0B5fRb4nvaiFHZk00YURodU13LTQ'
-DRIVE_RAWDOCS_FOLDER_ID = '0B5fRb4nvaiFHZVg5MEFCaEM2ZWM'
+# TODO: change back to what they were...
+DRIVE_CORPUS_FOLDER_ID = '0B5fRb4nvaiFHLXZLRVBpU01WYWs'
+DRIVE_RAWDOCS_FOLDER_ID = '0B5fRb4nvaiFHV1AzYlJuaHhyMms'

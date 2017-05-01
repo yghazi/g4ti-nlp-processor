@@ -277,7 +277,6 @@ def annotate_conll(annotated_content):
                             for c in combo:
                                 subseq_tokens += "{}\t{}\t{}\n".format(c, sent_pos.__getitem__(y)[1], 'I-' + ne_tag)
                                 y += 1
-
                         else:
                             # if tag belongs to the class of troublesome tags
                             subseq_tokens = token
@@ -303,10 +302,10 @@ def annotate_conll(annotated_content):
     # write to file: tagged iob data in train data path and text in raw data path
     file_name = get_file_name(content)
     # save iob annotated file
-    # save_file(file_name, file_content)
+    save_file(file_name, file_content)
     # save txt file
-    # save_file(file_name, content, False)
-    print(file_content)
+    save_file(file_name, content, False)
+    # print(file_content)
 
 
 def save_file(file_name, file_content, train=True):
@@ -325,11 +324,11 @@ def save_file(file_name, file_content, train=True):
     try:
         if corpus_file_util.upload_file(drive_folder, file_name + ext, file_path):
             print("File %s uploaded" % file_name + ext)
-            # TODO: OK to remove file, when in production
+            # TODO: OK to remove file and check for pending files, so uncomment when in production
             # os.remove(file_path)
             # check for pending uploads, if 15 min have passed since last check
-            if (current_milli_time() - last_pending_check) > 900000:
-                upload_pending_files(path, drive_folder)
+            # if (current_milli_time() - last_pending_check) > 900000:
+            #     upload_pending_files(path, drive_folder)
     except:
         print(traceback.format_exc())
 
@@ -360,7 +359,8 @@ def train_and_pickle():
 def test_ner():
     with open(TEST_PATH + '/carbanak-test.txt') as test:
         txt = test.read()
-        print(ner_tag_text(txt))
+        for x in ner_tag_text(txt):
+            print(x)
         test.close()
 
 
@@ -373,7 +373,8 @@ def ner_tag_text(text):
     pickle_file = open(TRAIN_MODEL_PICKLE, 'rb')
     chunker_pickle = pickle.load(pickle_file)
     pickle_file.close()
-    return tree2conlltags(chunker_pickle.parse(pos_tag(word_tokenize(text))))
+    tokens = list(filter(lambda w: not w.isspace(), [t.text for t in tokenizer.__call__(text)]))
+    return tree2conlltags(chunker_pickle.parse(pos_tag(tokens)))
 
 
 # train_and_pickle()
