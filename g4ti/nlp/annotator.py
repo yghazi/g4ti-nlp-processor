@@ -1,26 +1,21 @@
-import hashlib
-
 from nltk import pos_tag
 
-from g4ti.nlp import tokenizer
-from g4ti.nlp.tokenizer import get_sentences
+from g4ti.helpers.app_helper import AppHelper
+from g4ti.helpers.config_helper import ConfigHelper
+from g4ti.helpers.file_helper import FileHelper
+from g4ti.helpers.tokenizer_helper import TokenizerHelper
+from g4ti.nlp.default_tokenizer import DefaultTokenizer
 
 
 class Annotator:
-    digest = hashlib.md5()
+    def __init__(self):
+        self.config_util = ConfigHelper()
+        self.app_helper = AppHelper()
+        self.default_tokenizer = DefaultTokenizer()
+        self.tokenizer_helper = TokenizerHelper()
+        self.file_helper = FileHelper()
 
-    troublesome_tags = ["REGKEY", "URL", "DOMAIN", "FILE"]
-
-
-
-    def get_file_name(self, content):
-        """
-        Get file name by caclulating content hash
-        """
-        self.digest.update(content.encode('utf-8'))
-        return self.digest.hexdigest()
-
-    def annotate_conll(annotated_content):
+    def annotate_conll(self, annotated_content):
         """
         Properly formats annotated content in CONLL style
         (word  pos-tag  ner-label), and writes it to file
@@ -33,8 +28,9 @@ class Annotator:
         # sentences = sent_tokenize(content)
         # sentences = tokenizer.tokenize_sents(content)
         file_content = ''
-        for sentence in get_sentences(content):
-            sent_tokens = list(filter(lambda w: not w.isspace(), [t.text for t in tokenizer.__call__(sentence)]))
+        for sentence in self.default_tokenizer.get_sentences(content):
+            sent_tokens = list(filter(lambda w: not w.isspace(), [
+                t.text for t in self.default_tokenizer.get_tokenizer().__call__(sentence)]))
             # sent_tokens = word_tokenize(sentence)
             sent_pos = list(pos_tag(sent_tokens))
             i = 0
@@ -55,17 +51,20 @@ class Annotator:
                     # prev_label = ne_tag
                     if any(nextWords):
                         length = nextWords.__len__()
-                        # check each combination of nextwords for the presence of exactly the same subsequent words
+                        # check each combination of nextwords for the presence
+                        # of exactly the same subsequent words
                         y = i + 1
                         # TODO: make sure index doesn't go out of bounds
                         for combo in filter(lambda n: sent_tokens[y: y + n.__len__()] == n, nextWords):
-                            if ne_tag not in troublesome_tags:
+                            if ne_tag not in self.config_util.annotator_troublesome_tags:
                                 for c in combo:
-                                    subseq_tokens += "{}\t{}\t{}\n".format(c, sent_pos.__getitem__(y)[1], 'I-' + ne_tag)
+                                    subseq_tokens += "{}\t{}\t{}\n".format(
+                                        c, sent_pos.__getitem__(y)[1], 'I-' + ne_tag)
                                     y += 1
 
                             else:
-                                # if tag belongs to the class of troublesome tags
+                                # if tag belongs to the class of troublesome
+                                # tags
                                 subseq_tokens = token
                                 for c in combo:
                                     subseq_tokens += c
@@ -79,7 +78,7 @@ class Annotator:
                 else:
                     # if no tag assigned, check against pattern
                     # or else, assign 'O'
-                    label = pattern_token(token)
+                    label = self.tokenizer_helper.pattern_token(token)
                     label = label if label else 'O'
 
                 file_content += "{}\t{}\t{}\n".format(token, pos, label)
@@ -87,10 +86,10 @@ class Annotator:
                     file_content += subseq_tokens
                 i += step
 
-        # write to file: tagged iob data in train data path and text in raw data path
-        file_name = get_file_name(content)
+        # write to file: tagged iob data in train data path and text in raw
+        # data path
+        file_name = self.app_helper.get_file_name(content)
         # save iob annotated file
-        # save_file(file_name, file_content)
+        self.file_helper.save_file(file_name, file_content)
         # save txt file
-        # save_file(file_name, content, False)
-        print(file_content)
+        self.file_helper.save_file(file_name, content, False)

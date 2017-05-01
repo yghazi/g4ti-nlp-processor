@@ -1,8 +1,10 @@
-import yaml, re
+import re
+import yaml
 
 
-class PatternUtil:
-    patterns = []
+class PatternHelper:
+    def __init__(self):
+        self.patterns = []
 
     def getPatterns(self):
         return self.patterns;

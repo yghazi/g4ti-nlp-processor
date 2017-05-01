@@ -1,8 +1,7 @@
 from g4ti.api import tator
-from g4ti.nlp import util, tokenizer
+from g4ti.helpers.pattern_helper import PatternHelper
 
 # TODO: add logging
 
-util.PatternUtil().load()
-
+PatternHelper().load()
 tator.run()

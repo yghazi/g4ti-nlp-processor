@@ -4,14 +4,15 @@ import PyPDF2
 import docx
 from flask import Flask, request
 from flask_cors import CORS
-from g4ti.api import corpus_file_util
 
-from g4ti.nlp import tokenizer
 from g4ti import constants
+from g4ti.api import corpus_file_util
+from g4ti.nlp.annotator import Annotator
 
 app = Flask(__name__)
 CORS(app)
 
+annotator = Annotator()
 
 @app.route('/')
 def welcome():
@@ -42,7 +43,7 @@ def train():
     annotated_content = request.get_data()
     annotated_content = annotated_content.decode('UTF-8')
     annotated_content = json.loads(annotated_content)
-    tokenizer.annotate_conll(annotated_content)
+    annotator.annotate_conll(annotated_content)
     return "{'submitted':true}"
 
 
