@@ -12,8 +12,8 @@ Clone this repo:
 ```
 git clone https://github.com/yghazi/g4ti-nlp-processor.git
 ```
-### Setup
-We assume you have installed python 3.x and its in path as well.
+### Requirements
+- Python 3.X
 
 ### To install dependencies execute the below command ###
 
