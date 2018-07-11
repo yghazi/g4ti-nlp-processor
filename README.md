@@ -4,8 +4,13 @@ This is the back-end of an annotation tool that allows you to annotate text docu
 ## Configuration #
 
 ### Clone git repo ###
+Repo for front-end:
 ```
 git clone https://github.com/yghazi/g4ti-tator.git
+```
+Clone this repo:
+```
+git clone https://github.com/yghazi/g4ti-nlp-processor.git
 ```
 ### Setup
 We assume you have installed python 3.x and its in path as well.
