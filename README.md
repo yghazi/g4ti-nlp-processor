@@ -15,10 +15,16 @@ git clone https://github.com/yghazi/g4ti-nlp-processor.git
 ### Requirements
 - Python 3.X
 
+For Windows, you will also need the following:
+- .NET framework
+- Visual Studio build tools
+
 ### To install dependencies execute the below command ###
 
 ```
 #!python
+
+cd g4ti-nlp-processor # navigate to the g4ti-nlp-processor folder
 
 pip install -r requirements.txt
 
@@ -38,3 +44,5 @@ python -m nltk.downloader averaged_perceptron_tagger
 
 python tator.py
 ```
+
+If your front-end is also running, you should be able to now use the nlp processor through your browser.
